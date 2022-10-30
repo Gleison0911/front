@@ -1,0 +1,105 @@
+<div class="container">
+    <h1 class="mb-4">
+        Página de Regras
+    </h1>
+</div>
+
+<div class="container">
+    <div class="row align-items-center">
+        <div class="col-md-2">
+            <button type="button" class="btn btn-outline-primary my-3" data-target="#exampleModal"
+                data-toggle="modal">Adicionar
+                Meladalha</button>
+        </div>
+        <div class="col-md-10">
+            <app-search (searchTextChanged)="onSearchTextChanged($event)"></app-search>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#ID</th>
+                <th scope="col">Titulo</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Medal ID</th>
+                <th scope="col">Type</th>
+                <th scope="col">Quantidade</th>
+                <th scope="col">Atualizar</th>
+                <th scope="col">Deletar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of ruleList | paginate: { itemsPerPage: 10, currentPage: tableSize }">
+                <th scope="row" *ngIf="searchText === '' || item.titulo.includes(searchText)">{{ item.id }}</th>
+                <td *ngIf="searchText === '' || item.titulo.includes(searchText)">{{ item.titulo }}</td>
+                <td *ngIf="searchText === '' || item.titulo.includes(searchText)">{{ item.descricao }}</td>
+                <td *ngIf="searchText === '' || item.titulo.includes(searchText)">{{ item.medal_id }}</td>
+                <td *ngIf="searchText === '' || item.titulo.includes(searchText)">{{ item.type }}</td>
+                <td *ngIf="searchText === '' || item.titulo.includes(searchText)">{{ item.qtyd }}</td>
+                <td *ngIf="searchText === '' || item.titulo.includes(searchText)">
+                    <button type="button" class="btn btn-outline-warning" data-target="#exampleModal"
+                        data-toggle="modal" (click)="oneEdite(item.id)">Atualizar</button>
+                </td>
+                <td *ngIf="searchText === '' || item.titulo.includes(searchText)">
+                    <button type="button" class="btn btn-outline-danger" (click)="deleteRule(item.id)">Excluir</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center paginator-style">
+        <pagination-controls class="p-2" (pageChange)="tableSize = $event" previousLabel="" nextLabel=""></pagination-controls>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Meladalhas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formRule" (ngSubmit)="saveData()">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="id" name="id" formControlName="id" placeholder="ID">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="titulo" name="titulo" formControlName="titulo"
+                            placeholder="Titulo">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="descricao" name="descricao"
+                            formControlName="descricao" placeholder="Descrição">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="medal_id" name="medal_id" formControlName="medal_id"
+                            placeholder="ID da Medalha">
+                    </div>
+
+                    <div class="form-group">
+                        <label value="">Selecione o tipo:</label>
+                        <select class="form-control" id="type" name="type" formControlName="type"
+                            (change)="changeType($event)">
+                            <option *ngFor="let item of mockType" [ngValue]="item.type">{{ item.type }}</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="qtyd" name="qtyd" formControlName="qtyd"
+                            placeholder="Quantidade">
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="saveData()" data-dismiss="modal"
+                    [disabled]="formRule.invalid">Salvar Regra</button>
+            </div>
+        </div>
+    </div>
+</div>
